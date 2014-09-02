@@ -3,6 +3,7 @@
  */
 joe.define('popup', function (require, output) {
 
+
     output.show = function () {
         alert('show');
     }
