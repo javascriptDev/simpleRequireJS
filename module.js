@@ -10,7 +10,7 @@
                 cb(o[obj], obj);
             }
 
-        } else if (type == '[object Array]') {
+        } else if (type == '[object Array]' || type == '[object NodeList]') {
             for (var i = 0; i < o.length; i++) {
                 var obj = o[i];
                 cb(o[i], i);
@@ -21,7 +21,7 @@
     var joe = {
         define: function (name, depends, out) {
             var argL = arguments.length;
-            if (!this.exist() && argL > 1) {
+            if (!this.exist(name) && argL > 1) {
                 var mName, dependsArr, outFunc;
                 if (argL == 3) {
                     mName = name;
@@ -39,6 +39,7 @@
                     each(dependsArr, function (depend) {
                         me.addScript(depend, function (name) {
                             tem.push(name);
+
                             if (tem.length == dependsArr.length) {
                                 //depends is all loaded
                                 outFunc(me.require, outO);
@@ -47,7 +48,6 @@
                                     depend: dependsArr,
                                     out: outO
                                 })
-
                             }
                         })
                     })
@@ -59,8 +59,6 @@
                         out: outO
                     })
                 }
-
-
             }
         },
         require: function (name) {
@@ -85,6 +83,21 @@
                 fn && fn(name);
             }
         },
+//        exist: function (name) {
+//            var result = false;
+//            each(document.head.querySelectorAll('script'), function (item, index) {
+//                if(item.getAttribute('data-type')=='enter'){
+//                    return;
+//                }
+//                var n = item.src.split('/');
+//                if (n[n.length - 1].split('.')[0] == name) {
+//                    result = true;
+//                    return;
+//                }
+//            })
+//
+//            return result;
+//        },
         exist: function (name) {
             var result = false;
             each(this.cache, function (item, index) {
